@@ -1,0 +1,260 @@
+{
+  "info": {
+    "_postman_id": "1234567-89ab-cdef-0123-456789abcdef",
+    "name": "Cricket Stock Exchange API",
+    "description": "API collection for Cricket Stock Exchange platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"username\": \"testuser\",\n\t\"email\": \"test@example.com\",\n\t\"password\": \"Test123!@#\",\n\t\"confirmPassword\": \"Test123!@#\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "signup"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"email\": \"test@example.com\",\n\t\"password\": \"Test123!@#\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/verify-email/:token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "verify-email", ":token"],
+              "variable": [
+                {
+                  "key": "token",
+                  "value": "verification-token"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"email\": \"test@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/forgot-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "forgot-password"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Player Stocks",
+      "item": [
+        {
+          "name": "Get All Stocks",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/player-stocks?sort=currentPrice&order=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "player-stocks"],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "currentPrice"
+                },
+                {
+                  "key": "order",
+                  "value": "desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buy Stock",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"quantity\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/player-stocks/:id/buy",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "player-stocks", ":id", "buy"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "stock-id"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Matches",
+      "item": [
+        {
+          "name": "Get Live Matches",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/matches/live",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "matches", "live"]
+            }
+          }
+        },
+        {
+          "name": "Get Match Details",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/matches/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "matches", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "match-id"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wallet",
+      "item": [
+        {
+          "name": "Get Wallet Balance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/wallet",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wallet"]
+            }
+          }
+        },
+        {
+          "name": "Add Money",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"amount\": 1000,\n\t\"paymentMethod\": \"CREDIT_CARD\",\n\t\"paymentDetails\": {\n\t\t\"cardNumber\": \"4111111111111111\",\n\t\t\"expiryMonth\": \"12\",\n\t\t\"expiryYear\": \"2025\",\n\t\t\"cvv\": \"123\"\n\t}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/wallet/deposit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wallet", "deposit"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "your-auth-token-here",
+      "type": "string"
+    }
+  ]
+}
