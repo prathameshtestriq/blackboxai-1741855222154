@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cricket-stock-exchange-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongodb:27017/cricket-stock-exchange
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - JWT_EXPIRES_IN=24h
+      - EMAIL_HOST=smtp.mailtrap.io
+      - EMAIL_PORT=2525
+      - EMAIL_USER=your-mailtrap-user
+      - EMAIL_PASS=your-mailtrap-password
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - logs:/usr/src/app/logs
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    command: npm run dev
+
+  mongodb:
+    image: mongo:latest
+    container_name: cricket-stock-exchange-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: cricket-stock-exchange-mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: cricket-stock-exchange-mailhog
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
+    networks:
+      - app-network
+
+volumes:
+  mongodb_data:
+  logs:
+
+networks:
+  app-network:
+    driver: bridge
